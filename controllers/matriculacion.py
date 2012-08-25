@@ -3,6 +3,7 @@
 
 @auth.requires_login()
 def index():
+    response.view = "generic.html"
     # buscar si el usuario completo la ficha de alumno:
     q = db.alumno.user_id == auth.user_id
     alumno = db(q).select(db.alumno.id).first()
@@ -13,6 +14,7 @@ def index():
 
 @auth.requires_login()
 def ficha_alumno():
+    response.view = "generic.html"
     # TODO: agregar seguridad (que el alumno solo pueda ver su ficha)
     if session.alumno_id:
         # si el alumno tiene creada ficha, la busco:
@@ -34,6 +36,7 @@ def ficha_alumno():
 
 @auth.requires_login()
 def ficha_estudios():
+    response.view = "generic.html"
     alumno_id = session.alumno_id
     
     # comprobar si estamos agregando o editando una ficha de estudios:
@@ -74,6 +77,7 @@ def ficha_estudios():
 
 @auth.requires_login()
 def ficha_laboral():
+    response.view = "generic.html"
     alumno_id = session.alumno_id
     
     # comprobar si estamos agregando o editando una ficha laboral:
@@ -114,6 +118,7 @@ def ficha_laboral():
     
 @auth.requires_login()
 def ficha_familiares():
+    response.view = "generic.html"
     alumno_id = session.alumno_id
     
     # comprobar si estamos agregando o editando una ficha de estudios:
@@ -154,6 +159,7 @@ def ficha_familiares():
 
 
 def solicitud():
+    response.view = "generic.html"
     "al finalizar, imprimo el formulario de matriculacion completo"
     
     alumno_id = session.alumno_id

@@ -28,6 +28,7 @@ db.define_table('alumno',
     # Datos varios
     Field('autorizo_publicacion', 'boolean',
           comment='de trabajos de mi autoría, como así tambien mi foto ...'),
+    format=lambda x: "%(last_name)s, %(first_name)s" % db.auth_user[x.user_id]
     )
 
 db.alumno.tipo_doc.requires = IS_IN_SET(TIPOS_DOCUMENTO)
