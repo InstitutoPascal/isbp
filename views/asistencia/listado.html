@@ -1,0 +1,19 @@
+{{extend 'layout.html'}}
+<h1>Tomar lista</h1>
+<form method="POST">
+<table>
+<tr><th>Alumno</th><th>Vino?</th></tr>
+{{for fila in filas_alumnos:}}
+<tr>
+   <td>{{="%(first_name)s, %(last_name)s" % fila.auth_user}}</td>
+   <td><input type="checkbox" name="{{="check_alumno_id.%s" % fila.cursa.alumno_id}}" 
+   {{if fila.cursa.alumno_id in listas_asistencia:}}
+       {{=""" checked="checked" """}}>
+   {{pass}}
+   </td>
+</tr>
+{{pass # cerramos el for!}}
+</table>
+<input type="hidden" name="completo" value="si">
+<input type='submit'>
+</form>

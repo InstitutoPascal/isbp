@@ -58,3 +58,4 @@
 [2012-08-24 21:32:18] EDIT isbp/views/asistencia/listado.html: -1
 [2012-08-24 21:34:11] EDIT isbp/controllers/asistencia.py: 4
 [2012-08-24 21:34:22] EDIT isbp/controllers/asistencia.py: 0
+[2012-08-24 21:52:12] EDIT isbp/models/db_estudios.py: 5

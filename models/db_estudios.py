@@ -90,3 +90,10 @@ db.define_table("asistencia",
     Field("fecha", "date"),
     Field("comision_id", db.comision)
     )
+
+
+db.define_table("asistencia",
+    Field("alumno_id", db.alumno),
+    Field("fecha", "date"),
+    Field("comision_id", db.comision)
+    )
