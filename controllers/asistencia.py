@@ -61,3 +61,64 @@ def listado():
             ##'docente': docente,
             'horarios': horarios,
             }
+            
+
+def consulta():
+   if request.args:
+       # convierto la url (string) a un entero:
+       nro_pagina = int(request.args[0])
+   else:
+       nro_pagina = 0
+   registros_por_pagina = 2
+   
+   # creo el formulario de consulta:
+   form = SQLFORM.factory(
+        Field("alumno_id", db.alumno, 
+              requires=IS_EMPTY_OR(IS_IN_DB(db, db.alumno, 
+                  lambda x: "%(last_name)s, %(first_name)s" % db.auth_user[x.user_id]))),
+        Field("fecha_desde", "date"),
+        Field("fecha_hasta", "date"),
+        Field("comision_id", db.comision , requires=IS_EMPTY_OR(IS_IN_DB(db, db.comision, 
+                  lambda x: "%(nombre)s" % db.materia[x.materia_id]))),
+        )
+   # creo la consulta generica base
+   q = db.alumno.id==db.asistencia.alumno_id
+   q &= db.comision.id==db.asistencia.comision_id
+   q &= db.materia.id==db.comision.materia_id
+   q &= db.alumno.user_id==db.auth_user.id
+
+   if form.accepts(request.vars, session):
+       # guardo en la sesion los datos que ingreso el usuario
+       # (para poder reusarlo en futuras requerimientos -cadavezquepedimosunapagian-)
+       session.alumno_id = form.vars.alumno_id
+       session.comision_id = form.vars.comision_id
+       session.fecha_desde = form.vars.fecha_desde
+       session.fecha_hasta = form.vars.fecha_hasta
+
+   # agrego los filtros segun los datos que completo el usuario en el formulario antes mencionado:
+   if session.alumno_id:
+       q &= db.asistencia.alumno_id == session.alumno_id
+   if session.comision_id:
+       q &= db.asistencia.comision_id == session.comision_id
+   if session.fecha_desde:
+       q &= db.asistencia.fecha >= session.fecha_desde
+   if session.fecha_hasta:
+       q &= db.asistencia.fecha <= session.fecha_hasta
+   
+   # pagino los resultados:
+   inicio = nro_pagina * registros_por_pagina
+   fin = inicio + registros_por_pagina
+   
+   # obtengo la cantidad de paginas:
+   cant_registros = db(q).count()
+   cant_paginas = cant_registros / registros_por_pagina 
+   
+   # ejecutamos la consulta, obtengo los registros ordenados:
+   registros = db(q).select(orderby=db.asistencia.id, 
+                            limitby=(inicio, fin),
+                            )
+
+   return dict(form=form, 
+               registros=registros, 
+               nro_pagina=nro_pagina, 
+               cant_paginas=cant_paginas)

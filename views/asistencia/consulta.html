@@ -1,0 +1,14 @@
+{{extend 'layout.html'}}
+<h1>Consulta de Asistencia</h1>
+<h2>Criterios de búsqueda</h2>
+{{=form}}
+<h2>Resultado</h2>
+{{=registros}}
+
+{{if nro_pagina>0:}}
+{{=A("Anterior", _href=URL("consulta", args=nro_pagina-1))}}
+{{pass}}
+-
+{{if nro_pagina<cant_paginas:}}
+{{=A("Siguiente", _href=URL("consulta", args=nro_pagina+1))}}
+{{pass}}
